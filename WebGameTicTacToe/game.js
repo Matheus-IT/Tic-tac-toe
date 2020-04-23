@@ -55,7 +55,12 @@ const game = {
 
     game_over: function () {
         this.end_game = true;
-        window.alert("game over");
+        let r = window.document.querySelector("div#res");
+        r.style.visibility = "visible";
+        r.innerHTML = `
+            Game over! Winner ${this.symbols.option[this.symbols.index]}
+            <button id="btn" onclick="game.start()">Restart?</button>
+        `;
     },
 
     drawer: function() {
@@ -70,6 +75,7 @@ const game = {
         this.board = ["","","","","","","","",""];
         this.drawer();
         this.end_game = false;
+        window.document.querySelector("div#res").style.visibility = "hidden";
     },
 };
 

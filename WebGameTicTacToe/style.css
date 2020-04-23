@@ -16,3 +16,24 @@ div#game div {
     justify-content: center;
     align-items: center;
 }
+
+div#res {
+    visibility: hidden;
+    width: 450px;
+    margin: auto;
+    margin-top: 10px;
+    padding: 10px;
+    border: 6px solid #6fa0d1;
+    border-radius: 5px;
+    background-color: #457db6;
+    color: white;
+    text-align: center;
+    font: normal 16pt Arial;
+}
+
+button#btn {
+    padding: 5px;
+    color: white;
+    background-color: #6fa0d1;
+    border-radius: 5px;
+}
