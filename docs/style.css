@@ -1,9 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
 
-body {
-    font: normal 18pt Bangers, cursive;
-}
-
 body div#player {
     font: normal 20pt Bangers, cursive;
     text-align: center;
@@ -11,25 +7,98 @@ body div#player {
     padding: 0px;
 }
 
-body div#table {
-    display: grid;
-    grid-template-columns: 30% auto 30%;
-    align-items: center;
-    text-align: center;
+@media (max-width: 599px) {
+    h1 {
+        margin: 0px;
+        padding: 0px;
+    }
+    h1#msg::after {
+        content: " Toe!";
+    }
+
+    body {
+        font: normal 12pt Bangers, cursive;
+    }
+
+    body div#table {
+        display: grid;
+        grid-template-columns: auto;
+        align-items: center;
+        text-align: center;
+    }
+
+    div#game {
+        width: 320px;
+        height: 320px;
+        margin: auto;
+        margin-top: 10px;
+        color: white;
+        border: 5px solid #6fa0d1;
+        border-radius: 10px;
+        box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.2);
+        display: grid;
+        grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    }
+
+    div#res {
+        visibility: hidden;
+        width: 320px;
+        margin: auto;
+        margin-top: 10px;
+        padding: 10px 0px 10px 0px;
+        border: 6px solid #6fa0d1;
+        border-radius: 5px;
+        box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.2);
+        background-color: #457db6;
+        color: white;
+        text-align: center;
+    }
 }
 
-div#game {
-    width: 37vw;
-    height: 77vh;
-    margin: auto;
-    margin-top: 10px;
-    color: white;
-    border: 5px solid #6fa0d1;
-    border-radius: 10px;
-    box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.2);
-    display: grid;
-    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+@media (min-width: 600px) {
+    h1#msg2::before {
+        content: "Toe!";
+    }
+
+    body {
+        font: normal 18pt Bangers, cursive;
+    }
+
+    body div#table {
+        display: grid;
+        grid-template-columns: 30% auto 30%;
+        align-items: center;
+        text-align: center;
+    }
+
+    div#game {
+        width: 37vw;
+        height: 75vh;
+        margin: auto;
+        margin-top: 10px;
+        color: white;
+        border: 5px solid #6fa0d1;
+        border-radius: 10px;
+        box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.2);
+        display: grid;
+        grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    }
+
+    div#res {
+        visibility: hidden;
+        width: 37vw;
+        margin: auto;
+        margin-top: 10px;
+        padding: 10px 0px 10px 0px;
+        border: 6px solid #6fa0d1;
+        border-radius: 5px;
+        box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.2);
+        background-color: #457db6;
+        color: white;
+        text-align: center;
+    }
 }
+
 div#game > div {
     border: 5px solid #6fa0d1;
     background-color: #457db6;
@@ -42,20 +111,6 @@ div#game > div {
 div#game > div:hover, :active {
     border-color: #457db6;
     cursor: pointer;
-}
-
-div#res {
-    visibility: hidden;
-    width: 37vw;
-    margin: auto;
-    margin-top: 10px;
-    padding: 10px 0px 10px 0px;
-    border: 6px solid #6fa0d1;
-    border-radius: 5px;
-    box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.2);
-    background-color: #457db6;
-    color: white;
-    text-align: center;
 }
 
 button#btn {
