@@ -5,7 +5,10 @@ const game = {
         index: 0,
         change: function () { //This method will be executed on each click
             this.index = (this.index == 0) ? 1 : 0;
-        }
+        },
+        get value() {
+            return this.option[this.index];
+        },
     },
     conteiner: null,
     end_game: false,
@@ -39,9 +42,9 @@ const game = {
     play: function (pos) {
         if (this.end_game) return false;
         if (this.board[pos] == "") {
-            this.board[pos] = this.symbols.option[this.symbols.index];
+            this.board[pos] = this.symbols.value;
             this.drawer();
-            let win_sequence_index = this.check_win(this.symbols.option[this.symbols.index]);
+            let win_sequence_index = this.check_win(this.symbols.value);
             if (win_sequence_index >= 0) {
                 this.game_over();
             } else {
@@ -58,7 +61,7 @@ const game = {
         let r = window.document.querySelector("div#res");
         r.style.visibility = "visible";
         r.innerHTML = `
-            Game over! Winner ${this.symbols.option[this.symbols.index]}
+            Game over! Winner ${this.symbols.value}
             <button id="btn" onclick="game.start()">Restart?</button>
         `;
     },
