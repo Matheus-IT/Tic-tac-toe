@@ -75,7 +75,9 @@ const game = {
         this.board = ["","","","","","","","",""];
         this.drawer();
         this.end_game = false;
-        window.document.querySelector("div#res").style.visibility = "hidden";
+        let r = window.document.querySelector("div#res");
+        r.innerHTML = "";
+        r.style.visibility = "hidden";
     },
 };
 
