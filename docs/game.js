@@ -1,5 +1,8 @@
 const game = {
     board: ["","","","","","","","",""],
+    conteiner: window.document.querySelector("div#game"),
+    end_game: false,
+    winner_sequence: null,
     symbols: {
         option: ["X", "O"],
         index: 0,
@@ -10,9 +13,15 @@ const game = {
             return this.option[this.index];
         },
     },
-    conteiner: null,
-    end_game: false,
-    winner_sequence: null,
+    
+    board_full: function () {
+        for (let c in this.board) {
+            if (this.board[c] == "") {
+                return false;
+            }
+        }
+        return true;
+    },
 
     check_win: function (symb) {
         let win_sequences = [
@@ -36,19 +45,18 @@ const game = {
         return false; //Couldn't find a winner sequence
     },
 
-    constructor: function (c) {
-        this.conteiner = c;
-    },
-
     play: function (pos) {
         if (this.end_game) return false;
         if (this.board[pos] == "") {
             this.board[pos] = this.symbols.value;
             this.drawer();
-            if (this.check_win(this.symbols.value)) {
+            if (this.check_win(this.symbols.value)) 
                 this.game_over(this.winner_sequence);
-            } else {
-                this.symbols.change();
+            else {
+                if (this.board_full())
+                    this.game_over();
+                else
+                    this.symbols.change();
             }
         }
     },
@@ -57,10 +65,17 @@ const game = {
         this.end_game = true;
         let r = window.document.querySelector("div#res");
         r.style.visibility = "visible";
-        r.innerHTML = `
-            Game over! Winner ${this.symbols.value}
-            <button id="btn" onclick="game.start()">Restart?</button>
-        `;
+        if (this.winner_sequence != null) {
+            r.innerHTML = `
+                Game over! Winner ${this.symbols.value}
+                <button id="btn" onclick="game.start()">Restart?</button>
+            `;
+        } else {
+            r.innerHTML = `
+                Game over! Deu Velha!
+                <button id="btn" onclick="game.start()">Restart?</button>
+            `;
+        }
     },
 
     drawer: function() {
@@ -78,8 +93,8 @@ const game = {
         let r = window.document.querySelector("div#res");
         r.innerHTML = "";
         r.style.visibility = "hidden";
+        this.winner_sequence = null;
     },
 };
 
-game.constructor(window.document.querySelector("div#game"));
 game.start();
