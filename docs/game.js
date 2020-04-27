@@ -13,7 +13,12 @@ const game = {
             return this.option[this.index];
         },
     },
-    
+
+    mostra_player: function () {
+        let player = window.document.querySelector("div#player");
+        player.innerHTML = `Player ${this.symbols.value}`;
+    },
+
     board_full: function () {
         for (let c in this.board) {
             if (this.board[c] == "") {
@@ -50,29 +55,39 @@ const game = {
         if (this.board[pos] == "") {
             this.board[pos] = this.symbols.value;
             this.drawer();
-            if (this.check_win(this.symbols.value)) 
-                this.game_over(this.winner_sequence);
+            if (this.check_win(this.symbols.value))
+                this.game_over();
             else {
                 if (this.board_full())
                     this.game_over();
-                else
+                else {
                     this.symbols.change();
+                    this.mostra_player();
+                }
             }
         }
     },
 
-    game_over: function (win_seq) {
+    paint_winner_sequence: function (win_seq) {
+        let elements = this.conteiner.children;
+        for (let c in win_seq) {
+            elements[win_seq[c]].style.background = "#005186";
+        }
+    },
+
+    game_over: function () {
         this.end_game = true;
         let r = window.document.querySelector("div#res");
         r.style.visibility = "visible";
         if (this.winner_sequence != null) {
+            this.paint_winner_sequence(this.winner_sequence);
             r.innerHTML = `
                 Game over! Winner ${this.symbols.value}
                 <button id="btn" onclick="game.start()">Restart?</button>
             `;
         } else {
             r.innerHTML = `
-                Game over! Deu Velha!
+                Game over! Deu Velha! \u{1F475}
                 <button id="btn" onclick="game.start()">Restart?</button>
             `;
         }
@@ -88,6 +103,7 @@ const game = {
 
     start: function () {
         this.board = ["","","","","","","","",""];
+        this.mostra_player();
         this.drawer();
         this.end_game = false;
         let r = window.document.querySelector("div#res");
