@@ -12,27 +12,28 @@ const game = {
     },
     conteiner: null,
     end_game: false,
-    win_sequence: [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6],
-    ],
+    winner_sequence: null,
 
     check_win: function (symb) {
-        for (let c in this.win_sequence) {
-            if (this.board[this.win_sequence[c][0]] == symb &&
-                this.board[this.win_sequence[c][1]] == symb &&
-                this.board[this.win_sequence[c][2]] == symb) {
-                    window.alert(`Winner sequence ${c}`);
-                    return c; //If a winner sequence was found, return its indexs
+        let win_sequences = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+        for (let c in win_sequences) {
+            if (this.board[win_sequences[c][0]] == symb &&
+                this.board[win_sequences[c][1]] == symb &&
+                this.board[win_sequences[c][2]] == symb) {
+                    this.winner_sequence = win_sequences[c];
+                    return true; //If a winner sequence was found
                 }
         }
-        return -1; //Couldn't find a winner sequence
+        return false; //Couldn't find a winner sequence
     },
 
     constructor: function (c) {
@@ -44,19 +45,15 @@ const game = {
         if (this.board[pos] == "") {
             this.board[pos] = this.symbols.value;
             this.drawer();
-            let win_sequence_index = this.check_win(this.symbols.value);
-            if (win_sequence_index >= 0) {
-                this.game_over();
+            if (this.check_win(this.symbols.value)) {
+                this.game_over(this.winner_sequence);
             } else {
                 this.symbols.change();
             }
-            return true;
-        } else {
-            return false;
         }
     },
 
-    game_over: function () {
+    game_over: function (win_seq) {
         this.end_game = true;
         let r = window.document.querySelector("div#res");
         r.style.visibility = "visible";
