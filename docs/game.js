@@ -1,116 +1,131 @@
 const game = {
-    board: ["","","","","","","","",""],
-    conteiner: window.document.querySelector("div#game"),
-    end_game: false,
-    winner_sequence: null,
-    symbols: {
-        option: ["X", "O"],
-        index: 0,
-        change: function () { //This method will be executed on each click
-            this.index = (this.index == 0) ? 1 : 0;
-        },
-        get value() {
-            return this.option[this.index];
-        },
-    },
+	board: ["","","","","","","","",""],
+	container: window.document.querySelector("div#game"),
+	is_end_game: false,
+	winner_sequence: null,
+	symbols: {
+		option: ["X", "O"],
+		index: 0,
+		change: function () { // This method will be executed on each click
+			this.index = (this.index == 0) ? 1 : 0;
+		},
+		get currentPlayer() {
+			return this.option[this.index];
+		}
+	},
 
-    mostra_player: function () {
-        let player = window.document.querySelector("div#player");
-        player.innerHTML = `Player ${this.symbols.value}`;
-    },
+	showCurrentPlayer: function () {
+		let player = window.document.querySelector("div#player");
+		player.innerHTML = `Player ${this.symbols.currentPlayer}`;
+	},
 
-    board_full: function () {
-        for (let c in this.board) {
-            if (this.board[c] == "") {
-                return false;
-            }
-        }
-        return true;
-    },
+	board_full: function () {
+		for (let c in this.board) {
+			if (this.board[c] == "") {
+				return false;
+			}
+		}
+		return true;
+	},
 
-    check_win: function (symb) {
-        let win_sequences = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6],
-        ];
-        for (let c in win_sequences) {
-            if (this.board[win_sequences[c][0]] == symb &&
-                this.board[win_sequences[c][1]] == symb &&
-                this.board[win_sequences[c][2]] == symb) {
-                    this.winner_sequence = win_sequences[c];
-                    return true; //If a winner sequence was found
-                }
-        }
-        return false; //Couldn't find a winner sequence
-    },
+	check_win: function (symb) {
+		let win_sequences = [
+			[0, 1, 2],
+			[3, 4, 5],
+			[6, 7, 8],
+			[0, 3, 6],
+			[1, 4, 7],
+			[2, 5, 8],
+			[0, 4, 8],
+			[2, 4, 6],
+		];
+		for (let c in win_sequences) {
+			if (this.board[win_sequences[c][0]] == symb &&
+				this.board[win_sequences[c][1]] == symb &&
+				this.board[win_sequences[c][2]] == symb) {
+					this.winner_sequence = win_sequences[c];
+					return true; //If a winner sequence was found
+				}
+		}
+		return false; //Couldn't find a winner sequence
+	},
 
-    play: function (pos) {
-        if (this.end_game) return false;
-        if (this.board[pos] == "") {
-            this.board[pos] = this.symbols.value;
-            this.drawer();
-            if (this.check_win(this.symbols.value))
-                this.game_over();
-            else {
-                if (this.board_full())
-                    this.game_over();
-                else {
-                    this.symbols.change();
-                    this.mostra_player();
-                }
-            }
-        }
-    },
+	play: function (pos) {
+		if (this.is_end_game) return false;
+		if (this.board[pos] == "") {
+			this.board[pos] = this.symbols.currentPlayer;
+			this.drawTheBoard();
+			if (this.check_win(this.symbols.currentPlayer))
+				this.game_over();
+			else {
+				if (this.board_full())
+					this.game_over();
+				else {
+					this.symbols.change();
+					this.showCurrentPlayer();
+				}
+			}
+		}
+	},
 
-    paint_winner_sequence: function (win_seq) {
-        let elements = this.conteiner.children;
-        for (let c in win_seq) {
-            elements[win_seq[c]].style.background = "#005186";
-        }
-    },
+	paint_winner_sequence: function (win_seq) {
+		let elements = this.container.children;
+		for (let c in win_seq) {
+			elements[win_seq[c]].style.background = "#005186";
+		}
+	},
 
-    game_over: function () {
-        this.end_game = true;
-        let r = window.document.querySelector("div#res");
-        r.style.visibility = "visible";
-        if (this.winner_sequence != null) {
-            this.paint_winner_sequence(this.winner_sequence);
-            r.innerHTML = `
-                Game over! Winner ${this.symbols.value}
-                <button id="btn" onclick="game.start()">Restart?</button>
-            `;
-        } else {
-            r.innerHTML = `
-                Game over! Deu Velha! \u{1F475}
-                <button id="btn" onclick="game.start()">Restart?</button>
-            `;
-        }
-    },
+	game_over: function () {
+		this.is_end_game = true;
+		let r = window.document.querySelector("div#res");
+		r.style.visibility = "visible";
+		if (this.winner_sequence != null) {
+			this.paint_winner_sequence(this.winner_sequence);
+			
+			if (this.symbols.currentPlayer === "X") {
+				let timesXWon = Number.parseInt(sessionStorage.getItem("timesXWon"));
+				timesXWon += 1;
+				sessionStorage.setItem("timesXWon", timesXWon);
+				document.querySelector("#timesXWon").innerHTML = `Won ${timesXWon} times`;
+			} else {
+				let timesOWon = Number.parseInt(sessionStorage.getItem("timesOWon"));
+				timesOWon += 1;
+				sessionStorage.setItem("timesOWon", timesOWon);
+				document.querySelector("#timesOWon").innerHTML = `Won ${timesOWon} times`;
+			}
+			
+			r.innerHTML = `Game over! Winner ${this.symbols.currentPlayer}`;
+		} else {
+			r.innerHTML = `Game over! Deu Velha! \u{1F475}`;
+		}
+		r.innerHTML += '<button id="btn" onclick="game.restart()">Restart?</button>';
+	},
 
-    drawer: function() {
-        let content = "";
-        for (let c in this.board) {
-            content += `<div onclick="game.play(${c})"> ${this.board[c]} </div>`;
-        }
-        this.conteiner.innerHTML = content;
-    },
+	drawTheBoard: function() {
+		let content = "";
+		for (let c in this.board) {
+			content += `<div onclick="game.play(${c})"> ${this.board[c]} </div>`;
+		}
+		this.container.innerHTML = content;
+	},
 
-    start: function () {
-        this.board = ["","","","","","","","",""];
-        this.mostra_player();
-        this.drawer();
-        this.end_game = false;
-        let r = window.document.querySelector("div#res");
-        r.innerHTML = "";
-        r.style.visibility = "hidden";
-        this.winner_sequence = null;
-    },
+	start: function () {
+		this.showCurrentPlayer();
+		sessionStorage.setItem("timesXWon", 0);
+		sessionStorage.setItem("timesOWon", 0);
+		this.drawTheBoard();
+	},
+
+	restart: function () {
+		this.board = ["", "", "", "", "", "", "", "", ""];
+		this.is_end_game = false;
+		this.winner_sequence = null;
+		let r = window.document.querySelector("div#res");
+		r.innerHTML = "";
+		r.style.visibility = "hidden";
+		this.showCurrentPlayer();
+		this.drawTheBoard();
+	}
 };
 
 game.start();
